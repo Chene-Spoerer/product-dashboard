@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "health-check": "curl -f http://localhost:3000/api/health || exit 1"
+    "health-check": "curl -f http://localhost:3000/api/health || exit 1",
+    "docker:build": "docker build -f Dockerfile.dev -t product-dashboard-dev .",
+    "docker:run": "docker run -p 3000:3000 -v .:/app -v /app/node_modules product-dashboard-dev",
+    "docker:dev": "docker run -p 3000:3000 -v .:/app -v /app/node_modules product-dashboard-dev"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
