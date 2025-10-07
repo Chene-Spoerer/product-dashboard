@@ -18,6 +18,7 @@ export interface LowStockProduct {
   category: string;
   price: number;
   availabilityStatus: string;
+  thumbnail: string;
 }
 
 export interface LowStockResponse {

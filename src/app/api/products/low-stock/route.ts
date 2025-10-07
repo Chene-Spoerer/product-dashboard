@@ -22,7 +22,8 @@ export async function GET() {
         stock: product.stock,
         category: product.category,
         price: product.price,
-        availabilityStatus: product.availabilityStatus
+        availabilityStatus: product.availabilityStatus,
+        thumbnail: product.thumbnail
       } as LowStockProduct))
       // Sort by stock from lowest to highest
       .sort((a, b) => a.stock - b.stock);

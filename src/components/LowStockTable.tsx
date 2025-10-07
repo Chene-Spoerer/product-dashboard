@@ -27,6 +27,17 @@ export function LowStockTable({ products, onProductClick, onQuickOrder }: LowSto
     return 'text-yellow-600';
   };
 
+  const getAvailabilityColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'out of stock':
+        return 'bg-red-100 text-red-800';
+      case 'low stock':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-2 text-orange-600">
@@ -38,6 +49,7 @@ export function LowStockTable({ products, onProductClick, onQuickOrder }: LowSto
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-20">Image</TableHead>
               <TableHead>Product</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Price</TableHead>
@@ -49,7 +61,7 @@ export function LowStockTable({ products, onProductClick, onQuickOrder }: LowSto
           <TableBody>
             {products.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-8">
                   <div className="text-muted-foreground">
                     <div className="text-green-600 font-medium">Great news!</div>
                     <div>No products are currently low in stock</div>
@@ -59,6 +71,27 @@ export function LowStockTable({ products, onProductClick, onQuickOrder }: LowSto
             ) : (
               products.map((product) => (
                 <TableRow key={product.id} className="hover:bg-muted/50">
+                  <TableCell className="p-2">
+                    <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
+                      {product.thumbnail ? (
+                        <img
+                          src={product.thumbnail}
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            if (target.nextElementSibling) {
+                              (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                            }
+                          }}
+                        />
+                      ) : null}
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs" style={{ display: product.thumbnail ? 'none' : 'flex' }}>
+                        No Image
+                      </div>
+                    </div>
+                  </TableCell>
                   <TableCell className="font-medium">
                     <div className="font-semibold">{product.title}</div>
                   </TableCell>
@@ -82,7 +115,7 @@ export function LowStockTable({ products, onProductClick, onQuickOrder }: LowSto
                   </TableCell>
                   <TableCell>
                     <Badge 
-                      className="bg-yellow-100 text-yellow-800"
+                      className={getAvailabilityColor(product.availabilityStatus)}
                       variant="outline"
                     >
                       {product.availabilityStatus}

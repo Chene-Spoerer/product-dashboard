@@ -37,6 +37,7 @@ export function ProductsTable({ products, onProductClick }: ProductsTableProps) 
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-20">Image</TableHead>
             <TableHead>Product</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Price</TableHead>
@@ -49,13 +50,34 @@ export function ProductsTable({ products, onProductClick }: ProductsTableProps) 
         <TableBody>
           {products.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                 No products found
               </TableCell>
             </TableRow>
           ) : (
             products.map((product) => (
               <TableRow key={product.id} className="hover:bg-muted/50">
+                <TableCell className="p-2">
+                  <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {product.thumbnail ? (
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          if (target.nextElementSibling) {
+                            (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                          }
+                        }}
+                      />
+                    ) : null}
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs" style={{ display: product.thumbnail ? 'none' : 'flex' }}>
+                      No Image
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell className="font-medium">
                   <div>
                     <div className="font-semibold">{product.title}</div>

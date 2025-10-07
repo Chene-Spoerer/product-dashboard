@@ -136,6 +136,71 @@ export function ProductDetailSheet({ product, isOpen, onClose, onOrder }: Produc
         </SheetHeader>
 
         <div className="space-y-6 p-6">
+          {/* Product Images Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Product Images</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4">
+                {/* Main Product Image */}
+                <div className="flex-shrink-0">
+                  <div className="w-32 h-32 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {product.thumbnail ? (
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          if (target.nextElementSibling) {
+                            (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                          }
+                        }}
+                      />
+                    ) : null}
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm" style={{ display: product.thumbnail ? 'none' : 'flex' }}>
+                      No Image
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Additional Images Gallery */}
+                {product.images && product.images.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto flex-1">
+                    {product.images.slice(0, 4).map((image, index) => (
+                      <div key={index} className="w-20 h-20 rounded-md overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center">
+                        {image ? (
+                          <img
+                            src={image}
+                            alt={`${product.title} ${index + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              if (target.nextElementSibling) {
+                                (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                              }
+                            }}
+                          />
+                        ) : null}
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs" style={{ display: image ? 'none' : 'flex' }}>
+                          N/A
+                        </div>
+                      </div>
+                    ))}
+                    {product.images.length > 4 && (
+                      <div className="w-20 h-20 rounded-md bg-gray-100 flex-shrink-0 flex items-center justify-center text-gray-500 text-xs">
+                        +{product.images.length - 4} more
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Product Overview and Stock Chart - Side by Side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Product Information */}
