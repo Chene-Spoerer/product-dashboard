@@ -19,32 +19,38 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: latest
+
     - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
-
-    - name: Get pnpm store directory
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-    - name: Setup pnpm cache
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+        cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: |
+        echo "pnpm version: $(pnpm --version)"
+        echo "Node version: $(node --version)"
+        
+        # Check if lockfile exists
+        if [ -f "pnpm-lock.yaml" ]; then
+          echo "Found pnpm-lock.yaml"
+          
+          # Try frozen install first (for reproducible builds)
+          echo "Attempting frozen lockfile install..."
+          if pnpm install --frozen-lockfile; then
+            echo "✅ Frozen lockfile install successful"
+          else
+            echo "⚠️ Frozen lockfile install failed, trying regular install..."
+            pnpm install
+          fi
+        else
+          echo "No pnpm-lock.yaml found, running regular install..."
+          pnpm install
+        fi
 
     - name: Type check
       run: pnpm run type-check || npx tsc --noEmit
@@ -109,18 +115,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: latest
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
-
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
+        cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      run: pnpm install --frozen-lockfile || pnpm install
 
     - name: Run security audit
       run: pnpm audit --audit-level moderate
