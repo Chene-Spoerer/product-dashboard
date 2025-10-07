@@ -13,9 +13,9 @@ export async function GET() {
     const data: ProductsResponse = await response.json();
     const products = data.products;
 
-    // Filter products with "Low Stock" availability status
+    // Filter products with "Low Stock" or "Out of Stock" availability status
     const lowStockProducts = products
-      .filter(product => product.availabilityStatus === 'Low Stock')
+      .filter(product => product.availabilityStatus === 'Low Stock' || product.availabilityStatus === 'Out of Stock')
       .map(product => ({
         id: product.id,
         title: product.title,

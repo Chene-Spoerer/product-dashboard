@@ -43,8 +43,8 @@ export async function GET(request: NextRequest) {
     // Calculate total after filtering
     const total = filteredProducts.length;
 
-    // Apply pagination
-    const paginatedProducts = filteredProducts.slice(skip, skip + limit);
+    // Apply pagination - if limit is 0, return all filtered products
+    const paginatedProducts = limit === 0 ? filteredProducts : filteredProducts.slice(skip, skip + limit);
 
     // Return the filtered and paginated results
     const result: ProductsResponse = {
