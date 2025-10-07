@@ -3,10 +3,10 @@ import { Product } from '@/interfaces';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Validate that ID is provided and is a number
     if (!id || isNaN(Number(id))) {
