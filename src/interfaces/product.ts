@@ -25,7 +25,6 @@ export interface Product {
   meta: ProductMeta;
   thumbnail: string;
   images: string[];
-  [key: string]: any;
 }
 
 export interface Review {

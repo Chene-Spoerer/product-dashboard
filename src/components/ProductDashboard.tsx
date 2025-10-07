@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { MetricsCards } from './MetricsCards';
 import { ProductsTable } from './ProductsTable';
 import { LowStockTable } from './LowStockTable';
@@ -24,7 +22,6 @@ export default function ProductDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [totalProducts, setTotalProducts] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   // Fetch all products with search and filtering
@@ -39,7 +36,6 @@ export default function ProductDashboard() {
       const data = await response.json();
       
       setProducts(data.products || []);
-      setTotalProducts(data.total || 0);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
